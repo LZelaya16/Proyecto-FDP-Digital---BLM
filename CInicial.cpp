@@ -142,4 +142,91 @@ void vaciarCarrito() {
     }
 }
 
-return 0;
+void generarFactura() {
+    cout << "\n===== FACTURA =====\n";
+    cout << left << setw(30) << "Juego" << setw(10) << "Cantidad"
+         << setw(12) << "Precio" << setw(12) << "Subtotal" << endl;
+
+    for (int i = 0; i < MAX_JUEGOS; i++) {
+        if (carrito[i] > 0) {
+            subtotal = carrito[i] * precios[i];
+            cout << left << setw(30) << juegos[i] << setw(10) << carrito[i]
+                 << "$" << setw(11) << fixed << setprecision(2) << precios[i]
+                 << "$" << setw(11) << subtotal << endl;
+        }
+    }
+
+    cout << "\nTOTAL A PAGAR: $" << fixed << setprecision(2) << total << endl;
+}
+
+void confirmarCompra() {
+    char confirmacion;
+    bool carritoVacio = true;
+
+    for (int i = 0; i < MAX_JUEGOS; i++) {
+        if (carrito[i] > 0) {
+            carritoVacio = false;
+        }
+    }
+
+    if (carritoVacio) {
+        cout << "\nEl carrito esta vacio. No se puede confirmar la compra.\n";
+        return;
+    }
+
+    calcularTotal();
+
+    cout << "\nConfirma la compra? (s/n): ";
+    cin >> confirmacion;
+
+    if (confirmacion == 's' || confirmacion == 'S') {
+        generarFactura();
+
+        for (int i = 0; i < MAX_JUEGOS; i++) {
+            carrito[i] = 0;
+        }
+
+        cout << "\nCompra registrada. Gracias por su compra.\n";
+    } else {
+        cout << "\nSaliendo sin confirmar la compra.\n";
+    }
+}
+int main() {
+    int opcion = 0;
+
+    do {
+        mostrarMenu();
+        cin >> opcion;
+
+        if (opcion < 1 || opcion > 7) {
+            cout << "\nError: Opcion no valida.\n";
+        } else {
+            switch (opcion) {
+                case 1:
+                    verCatalogo();
+                    break;
+                case 2:
+                    agregarAlCarrito();
+                    break;
+                case 3:
+                    calcularTotal();
+                    break;
+                case 4:
+                    modificarCarrito();
+                    break;
+                case 5:
+                    vaciarCarrito();
+                    break;
+                case 6:
+                    confirmarCompra();
+                    break;
+                case 7:
+                    cout << "\nGracias por visitar la tienda. Hasta pronto.\n";
+                    break;
+            }
+        }
+
+    } while (opcion != 7);
+
+    return 0;
+}
